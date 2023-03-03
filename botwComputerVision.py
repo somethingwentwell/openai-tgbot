@@ -27,9 +27,29 @@ API_URL = "https://{}.openai.azure.com/openai/deployments/{}/completions?api-ver
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot powered by Azure OpenAI, please talk to me!")
 
+async def photo(update, context):
+    if update.message.photo:
+        # Get the photo file ID
+        photo_file_id = update.message.photo[-1].file_id
+        # Download the photo
+        photo_file = await context.bot.get_file(photo_file_id)
+        photo_url = photo_file.file_path
+        # Call the Azure Computer Vision API to analyze the photo
+        headers = {'Ocp-Apim-Subscription-Key': os.getenv("COMPUTER_VISION_KEY"), 'Content-Type': 'application/json'}
+        params = {'visualFeatures': 'Description'}
+        imgData = {'url': photo_url}
+        response = requests.post(os.getenv("COMPUTER_VISION_ENDPOINT") + '/vision/v3.2/analyze', headers=headers, params=params, json=imgData)
+        # Parse the response and send it back to the user
+        if response.status_code == 200:
+            result = response.json()
+            description = result['description']['captions'][0]['text']
+            await context.bot.send_message(chat_id=update.effective_chat.id, text='Description: ' + description)
+        else:
+            await context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, there was an error analyzing your photo.")
+
 async def echo(update, context):
     preprompt = os.getenv("PREPROMPT")
-    prompt = preprompt + '\n' + update.message.text + '\n\n'
+    prompt = preprompt + update.message.text
     stop = None
     if (len(json.loads(os.getenv("STOP"))) > 0):
         stop = json.loads(os.getenv("STOP"))
@@ -64,7 +84,9 @@ if __name__ == '__main__':
     
     start_handler = CommandHandler('start', start)
     echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
+    photo_handler = MessageHandler(filters.PHOTO, photo)
     application.add_handler(start_handler)
     application.add_handler(echo_handler)
+    application.add_handler(photo_handler)
     
     application.run_polling()

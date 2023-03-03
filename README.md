@@ -37,8 +37,13 @@ Make sure to keep the `.env` file private and do not commit it to version contro
 ```
 python bot.py
 ```
+or in Docker
+```
+docker build -t openai-tg-bot .
+docker run -it --env-file .env openai-tg-bot
+```
 
-1. Send a message to your bot in Telegram, and it should respond with a generated message
+2. Send a message to your bot in Telegram, and it should respond with a generated message
 
 
 ## Contributing
