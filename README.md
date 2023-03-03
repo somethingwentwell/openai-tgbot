@@ -40,7 +40,7 @@ python bot.py
 or in Docker
 ```
 docker build -t openai-tg-bot .
-docker run -it --env-file .env openai-tg-bot
+docker run -d --env-file .env openai-tg-bot
 ```
 
 2. Send a message to your bot in Telegram, and it should respond with a generated message
