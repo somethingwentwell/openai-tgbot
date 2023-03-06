@@ -21,11 +21,12 @@ logging.basicConfig(
 # MODEL = "test-text-davinci"
 ENGINE = os.getenv("ENGINE")
 OPENAI_NAME = os.getenv("OPENAI_NAME")
+OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
 API_KEY = os.getenv("OPENAI_API_KEY")
-API_URL = "https://{}.openai.azure.com/openai/deployments/{}/completions?api-version=2022-12-01".format(OPENAI_NAME, ENGINE)
+API_URL = "https://{}.openai.azure.com/openai/deployments/{}/completions?api-version={}".format(OPENAI_NAME, ENGINE, OPENAI_API_VERSION)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot powered by Azure OpenAI, please talk to me!")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="This is a bot that uses OpenAI to generate responses. Source code: https://github.com/somethingwentwell/openai-botframework")
 
 async def echo(update, context):
     preprompt = os.getenv("PREPROMPT")

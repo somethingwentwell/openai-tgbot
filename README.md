@@ -23,10 +23,19 @@ pip install python-telegram-bot aiohttp openai python-dotenv
 3. Set up the environment variables in a `.env` file. You can copy the `.env.example` file and rename it to `.env`, then replace the placeholders with your own API key and bot token.
 
 ```
-API_KEY=<your_openai_api_key>
-BOT_TOKEN=<your_telegram_bot_token>
-MODEL=<your_model_in_azure_openai>
-PREPROMPT=<the_prompt_before_user_input>
+TG_BOT_TOKEN=
+
+OPENAI_API_VERSION=2022-12-01
+OPENAI_NAME=
+OPENAI_API_KEY=
+ENGINE=
+MAX_TOKENS=
+TEMPERATURE=
+FREQUENCY_PENALTY=
+PRESENCE_PENALTY=
+TOP_P=
+STOP=[]
+PREPROMPT=
 ```
 
 Make sure to keep the `.env` file private and do not commit it to version control.
